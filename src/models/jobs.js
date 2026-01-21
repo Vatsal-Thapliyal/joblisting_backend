@@ -38,19 +38,15 @@ const jobSchema = new mongoose.Schema({
   timestamps: true 
 });
 
-// Compound unique index to prevent duplicates
 jobSchema.index({ source: 1, externalJobId: 1 }, { unique: true });
 
-// Additional indexes for common queries
 jobSchema.index({ company: 1 });
 jobSchema.index({ location: 1 });
 jobSchema.index({ category: 1 });
 jobSchema.index({ createdAt: -1 });
 
-// Pre-save hook to update lastUpdatedAt
-jobSchema.pre('findOneAndUpdate', function(next) {
+jobSchema.pre('findOneAndUpdate', function() {
   this.set({ lastUpdatedAt: new Date() });
-  next();
 });
 
 module.exports = mongoose.model("Job", jobSchema);
